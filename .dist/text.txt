@@ -1,0 +1,96 @@
+{
+    "postman.settings.dotenv-detection-notification-visibility": false
+}
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+const AdminDashboard = () => {
+  const [dashboard, setDashboard] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+
+        if (!token) {
+          setError("No token found. Please login again.");
+          return;
+        }
+
+        const res = await axios.get(
+          "http://localhost:5000/admin/dashboard",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setDashboard(res.data);
+      } catch (err) {
+        console.log(err);
+        setError("Unauthorized or Token Expired");
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const handleAdminLogout = ()=>{
+    localStorage.removeItem("adminToken")
+    window.location.reload()
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-red-500">
+        {error}
+      </div>
+    );
+  }
+
+  if (!dashboard) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        Loading Dashboard...
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen p-6 text-white">
+     <section className="flex justify-between items-center">
+       <h1 className="text-3xl font-bold mb-6">Trendora Admin Dashboard</h1>
+       <button onClick={handleAdminLogout} className="bg-red-500 rounded hover:scale-110 transition duration-75 p-2">logout</button>
+     </section>
+
+      {/* ✅ METRIC CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div className="card p-5 rounded-xl text-center">
+          <p className="text-gray-400">Total Users</p>
+          <h2 className="text-3xl font-bold">{dashboard.totalUsers}</h2>
+        </div>
+
+        <div className="card p-5 rounded-xl text-center">
+          <p className="text-gray-400">Total Orders</p>
+          <h2 className="text-3xl font-bold">{dashboard.totalOrders}</h2>
+        </div>
+
+        <div className="card p-5 rounded-xl text-center">
+          <p className="text-gray-400">Total Products</p>
+          <h2 className="text-3xl font-bold">{dashboard.totalProducts}</h2>
+        </div>
+
+        <div className="card p-5 rounded-xl text-center">
+          <p className="text-gray-400">Revenue</p>
+          <h2 className="text-3xl font-bold">₹ {dashboard.revenue}</h2>
+        </div>
+      </div>
+      
+    </div>
+  );
+};
+
+export default AdminDashboard;
