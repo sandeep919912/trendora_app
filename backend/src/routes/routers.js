@@ -1,53 +1,54 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/model")
-const { registerUser , loginUser } = require("../controllers/userCntrs");
+const User = require("../models/model");
+const { registerUser, loginUser } = require("../controllers/userCntrs");
 const verifyJWT = require("../middleware/auth");
 
 router.post("/register", registerUser);
-router.get("/register" , async (req, res) =>{
+router.get("/register", async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
-})
+});
 
-router.get("/register/:id" , async(req , res)=>{
+router.get("/register/:id", async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
 
-    if(!id){
-      return res.json(404).json({message:"id missing"})
+    if (!id) {
+      return res.json(404).json({ message: "id missing" });
     }
 
-    const currUser = await User.findById(id)
+    const currUser = await User.findById(id);
 
-    if(!currUser){
-      return res.status(404).json({message:"User not found"})
+    if (!currUser) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({message:"User fetched successfuly" , currUser : currUser})
+    return res
+      .status(200)
+      .json({ message: "User fetched successfuly", currUser: currUser });
   } catch (error) {
-    return res.status(500).json({message:"internal server error"})
+    return res.status(500).json({ message: "internal server error" });
   }
-})
-
+});
 
 router.patch("/user/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const {number ,  address } = req.body;
+    const { number, address } = req.body;
 
     // Validate required fields (optional)
-    if ( !number && !address) {
+    if (!number && !address) {
       return res.status(400).json({ message: "No data to update" });
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { number ,  address },
+      { number, address },
       { new: true } // ➜ returns updated user
     );
 
@@ -56,7 +57,6 @@ router.patch("/user/update/:id", async (req, res) => {
     }
 
     res.status(200).json(updatedUser);
-
   } catch (error) {
     res.status(500).json({
       message: "Unable to update profile",
@@ -82,13 +82,15 @@ router.get("/me", verifyJWT, async (req, res) => {
   }
 });
 
+router.post("/login", loginUser);
 
-
-router.post("/login" , loginUser)
-
-router.post("/logout" , verifyJWT ,  (req , res)=>{
-  res.clearCookie("token");
-  return res.status(200).json({message:"Logged out successfully"})
+router.post("/logout", verifyJWT, (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
+  return res.status(200).json({ message: "Logged out successfully" });
 });
 
 // router.get("/api/users" , (req , res)=>{
