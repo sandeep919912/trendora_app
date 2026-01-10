@@ -4,18 +4,29 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContext } from "react";
 import { ThemeContext } from "../../ContextApis/themeContext";
+import {toast} from "react-toastify"
+import { useEffect } from "react";
+import API from "../../Apis/axios";
 
 
 
 const ProfileCard = ({ user, setProfile }) => {
+
   const handleRemove = () => {
     setProfile(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user"); // remove user data
-    setProfile(false); // close the card
-    navigate("/login"); // redirect to login
+  const handleLogout = async() => {
+    await API.post("/logout" , {} , {withCredentials:true})
+    .then((res)=>{
+      toast.success(res.data.message)
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    })
+    .catch((err)=>{
+      toast.error(err.response?.data?.message || "Logout failed")
+    })
   };
 
   const {theme , toggleTheme} = useContext(ThemeContext)
@@ -61,14 +72,14 @@ const ProfileCard = ({ user, setProfile }) => {
         <p className="text-sm text-gray-600 mt-1">
           Logged in as:{" "}
           <span className="font-medium">
-            {user ? JSON.parse(user).email : "Guest"}
+            {user.email}
           </span>
         </p>
 
         {/* Links */}
         <div className="flex flex-col gap-2 mt-3">
           <Link
-            to="/Profile"
+            to="/profile"
             onClick={() => setProfile(false)}
             className="hover:text-blue-600 transition text-gray-700"
           >

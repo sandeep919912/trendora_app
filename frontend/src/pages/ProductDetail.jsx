@@ -3,16 +3,21 @@ import { motion, easeInOut } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../Apis/axios";
+import { toast } from "react-toastify";
+import { useContext } from "react";
+import { authContext } from "../ContextApis/CurrUserContext";
 
 function ProductDetail() {
   const navigate = useNavigate();
   const [item, setItem] = useState(null);
+  const {currUser} = useContext(authContext);
 
   const { id } = useParams();
 
   const fetchProduct = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/products/${id}`);
+      const res = await API.get(`/api/products/${id}`);
       setItem(res.data);
     } catch (error) {
       console.log("error in productDetail", error);
@@ -23,7 +28,15 @@ function ProductDetail() {
     fetchProduct();
   }, [id]);
   
+
+  // Buy Item function
   const buyItem = () => {
+    if(!currUser){
+      toast.info("Please login to continue buying")
+      navigate("/login")
+      return;
+    }
+    
     const buyNowItem = {
       productId: item._id,
       name: item.name,
@@ -118,7 +131,13 @@ function ProductDetail() {
                 <button
                   key={btnName}
                   onClick={() => handleClick(btnName)}
-                  className="border border-gray-800 dark:border-gray-100 p-2 rounded hover:scale-110 transition duration-100"
+                  className={`p-2 rounded hover:scale-110 transition duration-100 ${
+  btnName === "Buy Now"
+    ? "bg-black text-white"
+    : btnName === "Add to Cart"
+    ? "bg-blue-500"
+    : "bg-green-500"
+}`}
                 >
                   {btnName}
                 </button>

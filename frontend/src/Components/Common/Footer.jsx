@@ -71,7 +71,7 @@ const Footer = () => {
           <ul className="space-y-3">
             <li className="flex items-center gap-3">
               <Mail size={18} />
-              support@trendora.com
+              sandeeppandit919912@gmail.com
             </li>
             <li className="flex items-center gap-3">
               <Phone size={18} />

@@ -3,6 +3,9 @@ import { Star, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
 import {toast} from "react-toastify"
+import API from "../Apis/axios";
+import { useContext } from "react";
+import { authContext } from "../ContextApis/CurrUserContext";
 
 const ProductCard = ({ item }) => {
   const navigate = useNavigate();
@@ -13,7 +16,7 @@ const ProductCard = ({ item }) => {
 
   const AddToCart = async ({requireFields , userId}) => {
     try {
-      const AddedItem = await axios.post("http://localhost:5000/cart/add" , {requireFields , userId});
+      await API.post("/cart/add" , {requireFields , userId});
       toast.success("Item Added Successfully")
     } catch (error) {
       console.log("error while add to cart" , error)
@@ -21,8 +24,9 @@ const ProductCard = ({ item }) => {
     }
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user.id
+  const {currUser} = useContext(authContext);
+  const userId = currUser?._id;
+
 
   const requireFields = {
     name : item.name,
@@ -37,7 +41,6 @@ const ProductCard = ({ item }) => {
       navigate("/login");
       return;
     }
-    console.log(requireFields)
     AddToCart({requireFields , userId})
   };
 

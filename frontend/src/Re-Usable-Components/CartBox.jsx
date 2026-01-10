@@ -41,9 +41,9 @@ const CartBox = ({ item }) => {
             py-2
             sm:px-3
             sm:py-1
-            button
+            
             rounded
-            text-sm
+            text-sm bg-black text-white hover:scale-110 transition duration-75
           "
         >
           Buy
@@ -55,9 +55,9 @@ const CartBox = ({ item }) => {
             py-2
             sm:px-3
             sm:py-1
-            button
+            
             rounded
-            text-sm
+            text-sm bg-red-700 text-white hover:scale-110 transition duration-75
           "
         >
           Remove

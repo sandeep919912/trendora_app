@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "../Re-Usable-Components/ProductCard.jsx";
+import API from "../Apis/axios.js";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllProduct } from "../Redux/AllProducts/productSlice.js";
 
 const BestProducts = () => {
-  const [product, setProduct] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const { products, loading, error } = useSelector((state) => state.products);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/products");
-        setProduct(response.data);
-      } catch (error) {
-        console.error("Error while fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
+    dispatch(fetchAllProduct());
   }, []);
+
 
   return (
     <div className="min-h-[90vh] flex flex-col justify-center items-center py-10 card">
@@ -41,7 +35,7 @@ const BestProducts = () => {
                 <div className="h-8 bg-gray-300 rounded"></div>
               </div>
             ))
-          : product
+          : products
               .filter((item) => item.rating >= 4.7 || item.rating === undefined)
               .map((item) => <ProductCard key={item._id} item={item} />)}
       </div>

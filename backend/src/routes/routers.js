@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/model")
 const { registerUser , loginUser } = require("../controllers/userCntrs");
+const verifyJWT = require("../middleware/auth");
 
 router.post("/register", registerUser);
 router.get("/register" , async (req, res) =>{
@@ -64,8 +65,31 @@ router.patch("/user/update/:id", async (req, res) => {
   }
 });
 
+router.get("/me", verifyJWT, async (req, res) => {
+  try {
+    console.log("USER ID:", req.id);
+
+    const user = await User.findById(req.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.error("Me route error:", error.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 
 router.post("/login" , loginUser)
+
+router.post("/logout" , verifyJWT ,  (req , res)=>{
+  res.clearCookie("token");
+  return res.status(200).json({message:"Logged out successfully"})
+});
 
 // router.get("/api/users" , (req , res)=>{
 

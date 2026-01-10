@@ -4,6 +4,8 @@ import { ShoppingCart, User2, Menu, X } from "lucide-react";
 import ProfileCard from "../cardComponents/ProfileCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCart } from "../../Redux/Cart/cartSlice";
+import { useContext } from "react";
+import { authContext } from "../../ContextApis/CurrUserContext";
 
 const navItems = [
   { name: "Home", path: "/" },
@@ -18,13 +20,15 @@ const Navbar = () => {
   const [profile, setProfile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const user = localStorage.getItem("user");
+  const {currUser} = useContext(authContext);
   const dispatch = useDispatch();
   const itemCount = useSelector((state) => state.cart.items.length);
 
+ 
+
   useEffect(() => {
-    if (user) dispatch(fetchCart());
-  }, [dispatch, user]);
+    dispatch(fetchCart());
+  }, [ dispatch]);
 
   return (
     <>
@@ -68,7 +72,7 @@ const Navbar = () => {
 
         {/* Icons */}
         <div className="flex items-center gap-4">
-          {user && (
+          {currUser && (
             <Link to="/cart" className="relative p-2 hover:scale-110 transition">
               <ShoppingCart />
               <span className="absolute -top-1 -right-1 text-xs font-bold">
@@ -77,7 +81,7 @@ const Navbar = () => {
             </Link>
           )}
 
-          {user ? (
+          {currUser ? (
             <button
               onClick={() => setProfile(true)}
               className="p-2 hover:scale-110 transition"
@@ -103,7 +107,7 @@ const Navbar = () => {
         </div>
 
         {/* Profile Popup */}
-        {profile && <ProfileCard user={user} setProfile={setProfile} />}
+        {profile && <ProfileCard user={currUser} setProfile={setProfile} />}
       </nav>
 
       {/* Mobile Menu */}
@@ -120,7 +124,7 @@ const Navbar = () => {
             </NavLink>
           ))}
 
-          {!user && (
+          {!currUser && (
             <button
               onClick={() => {
                 navigate("/login");

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API from "../../Apis/axios"
 
 const AdminHome = () => {
   const [dashboard, setDashboard] = useState(null);
@@ -9,7 +10,7 @@ const AdminHome = () => {
     const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem("adminToken");
-        const res = await axios.get("http://localhost:5000/admin/dashboard", {
+        const res = await API.get("/admin/dashboard", {
           headers: {
             Authorization: `bearer ${token}`,
           },
@@ -21,7 +22,7 @@ const AdminHome = () => {
       }
     };
     fetchDashboardData();
-  });
+  },[]);
 
   const handleAdminLogout = () => {
     localStorage.removeItem("adminToken");

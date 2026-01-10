@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
+import API from '../../Apis/axios'
 
 const AllQueries = () => {
 
@@ -7,16 +8,13 @@ const AllQueries = () => {
   
   useEffect(()=>{
     const fetchAllQueries = async()=>{
-      const res = await axios.get("http://localhost:5000/api/query")
+      const res = await API.get("/api/query")
       // console.log(res)
       setQuery(res.data.queries)
     }
     fetchAllQueries()
   },[])
 
-  useEffect(()=>{
-    console.log(query)
-  })
 
   if(!query){
     return <h1>Loading...</h1>

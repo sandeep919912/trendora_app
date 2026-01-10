@@ -1,6 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { NavLink, Outlet } from "react-router-dom";
+import { useContext } from "react";
+import { authContext } from "../ContextApis/CurrUserContext";
+import { useEffect } from "react";
 
 const Profile = () => {
   const links = [
@@ -9,7 +12,12 @@ const Profile = () => {
     { name: "Settings", path: "settings" },
   ];
 
-  const currUser = JSON.parse(localStorage.getItem("user"))
+  const {currUser , loading } = useContext(authContext);
+
+
+  if(loading){
+    return <h1>Loading ....</h1>
+  }
 
   return (
     <div className="w-full h-auto flex justify-between p-8 container mx-auto card">
@@ -66,7 +74,7 @@ const Profile = () => {
         initial={{ x: 200, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="w-[70%] max-h-[80vh] overflow-y-scroll p-5 shadow-lg bg-gray-200 rounded card"
+        className="w-[70%] max-h-[80vh] overflow-y-scroll no-scrollbar p-5 shadow-lg bg-gray-200 rounded card"
       >
         <Outlet />
       </motion.div>

@@ -10,6 +10,7 @@ const queryrouter = require("./src/routes/queryRoute");
 const adminAuthRouter = require("./src/routes/adminAuthRoute");
 const adminProtectedRouter = require("./src/routes/adminProtectedRoutes");
 const Orderrouter = require("./src/routes/order");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(
   })
 );
 
+app.use(cookieParser());
 app.use(express.json());
 
 

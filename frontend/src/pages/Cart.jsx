@@ -1,30 +1,24 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CartBox from "../Re-Usable-Components/CartBox";
+import API from "../Apis/axios";
+import { useContext } from "react";
+import { authContext } from "../ContextApis/CurrUserContext";
+import { fetchCart } from "../Redux/Cart/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    try {
-      const userId = JSON.parse(localStorage.getItem("user"))?.id;
-      if (!userId) return;
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.cart.items);
 
-      const res = await axios.get(
-        `http://localhost:5000/cart/get/${userId}`
-      );
-      setData(res.data || []);
-    } catch (error) {
-      console.log("Frontend error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const data = items;
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(fetchCart())
+    setLoading(false)
+  }, [dispatch]);
 
   const totalPrice = data.reduce(
     (acc, curr) => acc + curr.price * curr.quantity,
@@ -36,9 +30,7 @@ const Cart = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* CART ITEMS */}
         <div className="lg:col-span-2 card shadow-md rounded p-5">
-          <h1 className="font-semibold text-2xl mb-4">
-            Cart Store
-          </h1>
+          <h1 className="font-semibold text-2xl mb-4">Cart Store</h1>
 
           {loading ? (
             <p>Loading...</p>
@@ -49,9 +41,7 @@ const Cart = () => {
                 src="https://cdni.iconscout.com/illustration/premium/thumb/empty-cart-illustration-svg-download-png-6024626.png"
                 alt="Empty cart"
               />
-              <p className="text-gray-500">
-                Your cart is empty
-              </p>
+              <p className="text-gray-500">Your cart is empty</p>
             </div>
           ) : (
             <div className="flex flex-col gap-4">
@@ -64,23 +54,15 @@ const Cart = () => {
 
         {/* SUMMARY */}
         <div className="card shadow-md rounded p-5 h-fit">
-          <h1 className="font-semibold text-2xl mb-3">
-            Order Summary
-          </h1>
+          <h1 className="font-semibold text-2xl mb-3">Order Summary</h1>
 
-          <p className="text-gray-600 mb-2">
-            Number of Items: {data.length}
-          </p>
+          <p className="text-gray-600 mb-2">Number of Items: {data.length}</p>
 
           <hr className="my-3" />
 
           <div className="flex justify-between items-center mb-5">
-            <span className="font-semibold text-lg">
-              Total
-            </span>
-            <span className="text-2xl font-bold">
-              ₹ {totalPrice}
-            </span>
+            <span className="font-semibold text-lg">Total</span>
+            <span className="text-2xl font-bold">₹ {totalPrice}</span>
           </div>
 
           <button

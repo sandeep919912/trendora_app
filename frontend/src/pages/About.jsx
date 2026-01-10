@@ -137,7 +137,7 @@ const About = () => {
           streetwear - <span className="text-blue-500 font-semibold">Sandeep Pandit</span>
         </p>
         <p className="mt-4 text-yellow-400 font-semibold">
-          Wear Your Trend.
+          Wear Your Trend. Live Your Style.
         </p>
       </motion.section>
 

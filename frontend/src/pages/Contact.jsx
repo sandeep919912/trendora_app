@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import API from "../Apis/axios";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const Contact = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/query", formData);
+      await API.post("/api/query", formData);
       toast.success("Query submitted. We’ll contact you soon!");
       setFormData({ name: "", email: "", query: "" });
     } catch (err) {

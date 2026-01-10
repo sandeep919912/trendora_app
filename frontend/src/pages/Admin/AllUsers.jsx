@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import API from "../../Apis/axios"
 
 const AllUsers = () => {
   const [Users, setUsers] = useState(null);
@@ -8,7 +9,7 @@ const AllUsers = () => {
   useEffect(() => {
     const fetchAllusers = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/register");
+        const res = await API.get("/register");
         setUsers(res.data);
       } catch (error) {
         console.log("error while fetch users", error);
@@ -23,8 +24,8 @@ const AllUsers = () => {
 
   if (!Users) {
     return (
-      <div>
-        <h1>Empty</h1>
+      <div className="flex justify-center items-center w-full">
+        <h1>Loading.....</h1>
       </div>
     );
   }

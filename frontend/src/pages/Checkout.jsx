@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import API from "../Apis/axios"
+import { toast } from "react-toastify";
+
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -10,6 +13,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [paymentMode , setPaymentMode] = useState("COD")
   const [orderPlaced , setOrderPlaced] = useState(false)
+
 
   useEffect(() => {
     const data = localStorage.getItem("buyNowItem");
@@ -34,9 +38,8 @@ const Checkout = () => {
 
     try {
       setLoading(true);
-
       // 🔹 MOCK API (replace later)
-      await axios.post("http://localhost:5000/api/orders", {
+      await API.post("/api/orders", {
         items: [item],
         totalAmount: totalPrice,
         address,
@@ -49,7 +52,7 @@ const Checkout = () => {
       // navigate("/");
     } catch (error) {
       console.error("Order failed", error);
-      alert("Something went wrong");
+      toast.error("Order placement failed. Please try again.");
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 const express = require("express");
 const Order = require("../models/orderCheckout.model.js");
+const verifyJWT = require("../middleware/auth.js");
 
 const Orderrouter = express.Router();
 
@@ -7,7 +8,7 @@ const Orderrouter = express.Router();
  * @route   POST /api/orders
  * @desc    Place order (Buy Now / Checkout)
  */
-Orderrouter.post("/api/orders", async (req, res) => {
+Orderrouter.post("/api/orders", verifyJWT, async (req, res) => {
   try {
     const { items, totalAmount, address, paymentMode } = req.body;
 

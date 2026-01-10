@@ -2,13 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {toast} from "react-toastify"
+import API from "../Apis/axios"
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const [loginLoading , setLoginLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [error , setError] = useState(null)
 
   const handleChange = (e) => {
     setFormData({
@@ -21,30 +24,31 @@ const AdminLogin = () => {
     e.preventDefault();
 
     try {
-      const alreadyLogedIn = localStorage.getItem("adminToken")
+      setLoginLoading(true)
+      const alreadyLogedIn = localStorage.getItem("adminToken") || false
 
       if(alreadyLogedIn){
         alert("Admin already LoggedIn")
         return
       }
       
-      const res = await axios.post(
-        "http://localhost:5000/admin/login",
+      const res = await API.post(
+        "/admin/login",
         formData
       );
 
       localStorage.setItem("adminToken", res.data.token);
-
-      alert("Admin login Successfully");
-      console.log(res.data);
-
+      setLoginLoading(false)
       setFormData({ email: "", password: "" });
 
       navigate("/admin/dashboard");
       toast.success("Admin Logged In Successfully")
+
     } catch (error) {
       console.log(error.response?.data || error.message);
       alert(error.response?.data?.message || "Login failed");
+      setError(error.message)
+      setLoginLoading(false)
     }
   };
 
@@ -80,9 +84,9 @@ const AdminLogin = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold transition"
+          className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold transition`}
         >
-          Register
+          {loginLoading? "Verifying.." : "Login"}
         </button>
       </form>
     </div>
