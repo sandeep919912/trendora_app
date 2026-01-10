@@ -3,7 +3,7 @@ import { Moon, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContext } from "react";
-import { ThemeContext } from "../../ContextApis/themeContext";
+import { ThemeContext } from "../../ContextApis/ThemeContext";
 import {toast} from "react-toastify"
 import { useEffect } from "react";
 import API from "../../Apis/axios";
