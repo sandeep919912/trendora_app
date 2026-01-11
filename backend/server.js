@@ -16,6 +16,11 @@ const app = express();
 
 dotenv.config();
 
+
+
+app.use(cookieParser());
+app.use(express.json());
+
 app.use(
   cors({
     origin: "https://trendoraapp.vercel.app/",
@@ -23,9 +28,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(cookieParser());
-app.use(express.json());
 
 
 app.get("/", (req, res) => {
@@ -40,6 +42,8 @@ app.use(queryrouter)
 app.use(adminAuthRouter)
 app.use(adminProtectedRouter)
 app.use(Orderrouter)
+
+
 
 productsDb()
 connectDB(); //connected to database
