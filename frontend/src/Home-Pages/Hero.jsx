@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { ThemeContext } from "../ContextApis/ThemeContext";
 
+
 const categories = ["T-shirts", "Joggers", "Hoodies", "Sneakers"];
 const words = [
   "Elevate Your Streetwear",

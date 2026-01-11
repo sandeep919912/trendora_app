@@ -15,7 +15,7 @@ const Shop = () => {
 
   if (loading)
     return <h2 className="flex justify-center items-center">Loading...</h2>;
-  if (error) return <h2>{error}</h2>;
+  if (error) return <h2>{error.message}</h2>;
   return (
     <motion.div
       className="

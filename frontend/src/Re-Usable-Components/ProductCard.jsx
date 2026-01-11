@@ -19,7 +19,6 @@ const ProductCard = ({ item }) => {
       await API.post("/cart/add" , {requireFields , userId});
       toast.success("Item Added Successfully")
     } catch (error) {
-      console.log("error while add to cart" , error)
       toast.error(error)
     }
   };
