@@ -4,12 +4,10 @@ import { useEffect } from "react";
 
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL2, 
-  
+  baseURL: import.meta.env.VITE_BACKEND_URL, 
   withCredentials: true,
 });
 
-
-  console.log("BACKEND URL 👉", import.meta.env.VITE_BACKEND_URL);
+console.log("BACKEND URL 👉", import.meta.env.VITE_BACKEND_URL);
 
 export default API;
