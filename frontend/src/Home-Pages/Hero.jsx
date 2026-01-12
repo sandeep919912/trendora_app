@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useContext } from "react";
 import { ThemeContext } from "../ContextApis/ThemeContext";
 
-
 const categories = ["T-shirts", "Joggers", "Hoodies", "Sneakers"];
 const words = [
   "Elevate Your Streetwear",
@@ -42,11 +41,11 @@ const Hero = () => {
 
   return (
     <div
-      className={`${
-        theme === "dark"
-          ? "bg-[url('/darkBanner.png')]"
-          : "bg-[url('/Banner.png')]"
-      } bg-cover bg-center h-[90vh] flex items-center px-4 sm:px-8 md:px-12 lg:px-20 text-white relative`}
+      style={{
+        backgroundImage:
+          theme === "dark" ? "url(/darkBanner.png)" : "url(/Banner.png)",
+      }}
+      className="bg-cover bg-center h-[90vh] flex items-center px-4 sm:px-8 md:px-12 lg:px-20 text-white relative"
     >
       <div className="w-full lg:w-1/2 flex flex-col h-auto lg:h-3/5 justify-between space-y-8 lg:space-y-0">
         {/* Typing headline */}
