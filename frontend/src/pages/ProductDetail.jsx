@@ -11,7 +11,7 @@ import { authContext } from "../ContextApis/CurrUserContext";
 function ProductDetail() {
   const navigate = useNavigate();
   const [item, setItem] = useState(null);
-  const {currUser} = useContext(authContext);
+  const { currUser } = useContext(authContext);
 
   const { id } = useParams();
 
@@ -27,16 +27,15 @@ function ProductDetail() {
   useEffect(() => {
     fetchProduct();
   }, [id]);
-  
 
   // Buy Item function
   const buyItem = () => {
-    if(!currUser){
-      toast.info("Please login to continue buying")
-      navigate("/login")
+    if (!currUser) {
+      toast.info("Please login to continue buying");
+      navigate("/login");
       return;
     }
-    
+
     const buyNowItem = {
       productId: item._id,
       name: item.name,
@@ -50,9 +49,36 @@ function ProductDetail() {
     navigate(`/checkout/${item._id}`);
   };
 
+  const addToCart = async () => {
+    if (!currUser) {
+      toast.info("Please login to add items to cart");
+      navigate("/login");
+      return;
+    }
+    try {
+      await API.post("/cart/add", {
+        requireFields: {
+          name: item.name,
+          price: item.price,  
+          productId: item._id,
+          quantity: qty,
+          image: item.image,
+        },
+        userId: currUser._id,
+      });
+      toast.success("Item added to cart");
+    } catch (error) {
+      console.log("error in addToCart", error);
+      toast.error("Failed to add item to cart");
+    } 
+  };
+
   const handleClick = (btnName) => {
     if (btnName === "Buy Now") {
       buyItem();
+    }
+    else{
+      addToCart();
     }
   };
 
@@ -132,12 +158,12 @@ function ProductDetail() {
                   key={btnName}
                   onClick={() => handleClick(btnName)}
                   className={`p-2 rounded hover:scale-110 transition duration-100 ${
-  btnName === "Buy Now"
-    ? "bg-black text-white"
-    : btnName === "Add to Cart"
-    ? "bg-blue-500"
-    : "bg-green-500"
-}`}
+                    btnName === "Buy Now"
+                      ? "bg-black text-white"
+                      : btnName === "Add to Cart"
+                        ? "bg-blue-500"
+                        : "bg-green-500"
+                  }`}
                 >
                   {btnName}
                 </button>
